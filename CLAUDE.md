@@ -19,7 +19,11 @@
 ├── README.md        # User-facing documentation (English)
 ├── Dockerfile       # Container build definition
 ├── convert.sh       # Main conversion script (entry point)
-└── proxmox.list     # Proxmox APT repository config
+├── proxmox.list     # Proxmox APT repository config
+├── .dockerignore    # Excludes non-essential files from Docker build
+├── CLAUDE.md        # Claude Code project context (this file)
+└── .claude/
+    └── settings.json  # Claude Code permission settings
 ```
 
 ## Build & Run
@@ -38,6 +42,8 @@ docker run -v $(pwd):/data --rm astroicers/zst2vmdk ./your-file.vma.zst
 - README and user-facing docs are in **English**
 - Keep the codebase minimal — this is a single-purpose utility
 - Dockerfile uses `--no-install-recommends` to minimize image size
+- `convert.sh` uses `set -euo pipefail` strict mode — any command failure will abort the script
+- All shell variables must be properly quoted
 
 ## Important Notes
 
@@ -49,9 +55,7 @@ docker run -v $(pwd):/data --rm astroicers/zst2vmdk ./your-file.vma.zst
 
 ## Known Limitations
 
-- No error handling after `zstd`, `vma extract`, or `qemu-img` commands
-- Variables are unquoted — filenames with spaces will break
-- No cleanup of intermediate files (`.vma`, `.raw`) after conversion
 - Only supports single-disk VMs (glob `disk-drive-*.raw` passed to single output)
+- Only supports `.vma.zst` format (not `.vma.gz` or `.vma.lzo`)
 - No CI/CD pipeline configured
 - No automated tests
