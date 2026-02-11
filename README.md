@@ -2,12 +2,29 @@
 
 This repository provides a Docker-based solution for converting VMA files compressed with Zstandard (`.zst`) into VMDK format.
 
+## How It Works
+
+Conversion pipeline: `.vma.zst` → `.vma` → `.raw` → `.vmdk`
+
+1. Decompress the Zstandard archive (`zstd`)
+2. Extract the VMA backup (`vma extract`)
+3. Convert the raw disk image to VMDK (`qemu-img convert`)
+4. Clean up intermediate files automatically
+
 ## Installation
 
 Pull the latest Docker image:
 
 ```bash
 docker pull astroicers/zst2vmdk:latest
+```
+
+Or build from source:
+
+```bash
+git clone https://github.com/astroicers/zst2vmdk.git
+cd zst2vmdk
+docker build -t astroicers/zst2vmdk:latest .
 ```
 
 ## Usage
